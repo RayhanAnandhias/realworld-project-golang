@@ -5,12 +5,20 @@ import (
 	"net/http"
 
 	"github.com/RayhanAnandhias/realworld-project-golang/configs"
+	"github.com/RayhanAnandhias/realworld-project-golang/pkg/controllers"
+	"github.com/RayhanAnandhias/realworld-project-golang/pkg/routes"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 var (
 	server *gin.Engine
+
+	TagController      controllers.TagController
+	TagRouteController routes.TagRouteController
+
+	UserController      controllers.UserController
+	UserRouteController routes.UserRouteController
 )
 
 func init() {
@@ -20,6 +28,12 @@ func init() {
 	}
 
 	configs.ConnectDB(&config)
+
+	TagController = controllers.NewTagController(configs.DB)
+	TagRouteController = routes.NewTagRouteController(TagController)
+
+	UserController = controllers.NewUserController(configs.DB)
+	UserRouteController = routes.NewUserRouteController(UserController)
 
 	server = gin.Default()
 }
@@ -41,6 +55,9 @@ func main() {
 		message := "Welcome to Realworld Project"
 		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": message})
 	})
+
+	TagRouteController.TagRoute(router)
+	UserRouteController.UserRoute(router)
 
 	log.Fatal(server.Run(":" + config.ServerPort))
 }
