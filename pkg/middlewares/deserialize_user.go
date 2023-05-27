@@ -19,7 +19,7 @@ func DeserializeUser() gin.HandlerFunc {
 		authorizationHeader := ctx.Request.Header.Get("Authorization")
 		fields := strings.Fields(authorizationHeader)
 
-		if len(fields) != 0 && fields[0] == "Bearer" {
+		if len(fields) != 0 && fields[0] == "Token" {
 			accessToken = fields[1]
 		} else if err == nil {
 			accessToken = cookie
@@ -38,13 +38,14 @@ func DeserializeUser() gin.HandlerFunc {
 		}
 
 		var user models.User
-		result := configs.DB.First(&user, "id = ?", fmt.Sprint(sub))
+		result := configs.DB.Raw("SELECT * FROM users WHERE id = ?", fmt.Sprint(sub)).Scan(&user)
 		if result.Error != nil {
 			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "fail", "message": "the user belonging to this token no logger exists"})
 			return
 		}
 
 		ctx.Set("currentUser", user)
+		ctx.Set("token", accessToken)
 		ctx.Next()
 	}
 }

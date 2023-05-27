@@ -9,8 +9,8 @@ const TableNameUser = "users"
 // User mapped from table <users>
 type User struct {
 	ID        int32     `gorm:"column:id;type:integer;primaryKey;autoIncrement:true" json:"id"`
-	Username  string    `gorm:"column:username;type:text;not null" json:"username"`
-	Email     string    `gorm:"column:email;type:text;not null" json:"email"`
+	Username  string    `gorm:"column:username;type:text;not null;unique" json:"username"`
+	Email     string    `gorm:"column:email;type:text;not null;unique" json:"email"`
 	Password  string    `gorm:"column:password;type:text;not null" json:"password"`
 	Bio       *string   `gorm:"column:bio;type:text" json:"bio"`
 	Image     *string   `gorm:"column:image;type:text" json:"image"`
@@ -38,11 +38,11 @@ type UserLoginRequest struct {
 }
 
 type UserUpdate struct {
-	Email    string `json:"email,omitempty"`
-	Password string `json:"password,omitempty"`
-	Username string `json:"username,omitempty" `
-	Bio      string `json:"bio,omitempty"`
-	Image    string `json:"image,omitempty"`
+	Email    *string `json:"email"`
+	Password *string `json:"password"`
+	Username *string `json:"username" `
+	Bio      *string `json:"bio"`
+	Image    *string `json:"image"`
 }
 
 type UserUpdateRequest struct {
@@ -50,10 +50,10 @@ type UserUpdateRequest struct {
 }
 
 type UserProfile struct {
-	Username  string `json:"username"`
-	Bio       string `json:"bio,omitempty"`
-	Image     string `json:"image,omitempty"`
-	Following bool   `json:"following"`
+	Username  string  `json:"username"`
+	Bio       *string `json:"bio"`
+	Image     *string `json:"image"`
+	Following bool    `json:"following"`
 }
 
 type UserProfileResponse struct {

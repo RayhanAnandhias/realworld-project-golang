@@ -58,6 +58,8 @@ func main() {
 
 	TagRouteController.TagRoute(router)
 	UserRouteController.UserRoute(router)
+	UserRouteController.SingleUserRoute(router)
+	UserRouteController.ProfileRoute(router)
 
 	log.Fatal(server.Run(":" + config.ServerPort))
 }
