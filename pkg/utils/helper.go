@@ -1,6 +1,10 @@
 package utils
 
-import "database/sql"
+import (
+	"database/sql"
+	"regexp"
+	"strings"
+)
 
 func NewNullString(s *string) sql.NullString {
 	if s == nil {
@@ -10,4 +14,11 @@ func NewNullString(s *string) sql.NullString {
 		String: *s,
 		Valid:  true,
 	}
+}
+
+func GenerateSlug(s string) string {
+	stringRegex := regexp.MustCompile(`\s`)
+	trimmedString := strings.TrimSpace(s)
+	loweredString := strings.ToLower(trimmedString)
+	return stringRegex.ReplaceAllString(loweredString, "-")
 }

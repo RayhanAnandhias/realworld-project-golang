@@ -19,6 +19,11 @@ var (
 
 	UserController      controllers.UserController
 	UserRouteController routes.UserRouteController
+
+	ArticleController      controllers.ArticleController
+	ArticleRouteController routes.ArticleRouteController
+
+	CommentController controllers.CommentController
 )
 
 func init() {
@@ -34,6 +39,10 @@ func init() {
 
 	UserController = controllers.NewUserController(configs.DB)
 	UserRouteController = routes.NewUserRouteController(UserController)
+
+	ArticleController = controllers.NewArticleController(configs.DB)
+	CommentController = controllers.NewCommentController(configs.DB)
+	ArticleRouteController = routes.NewArticleRouteController(ArticleController, CommentController)
 
 	server = gin.Default()
 }
@@ -60,6 +69,7 @@ func main() {
 	UserRouteController.UserRoute(router)
 	UserRouteController.SingleUserRoute(router)
 	UserRouteController.ProfileRoute(router)
+	ArticleRouteController.ArticleRoute(router)
 
 	log.Fatal(server.Run(":" + config.ServerPort))
 }
